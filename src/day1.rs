@@ -15,6 +15,7 @@ const data: [i32; 200] = [
     1748, 1921, 1617, 2004, 1792, 1732, 1740, 1831,
 ];
 
+
 fn day1_part2(numbers: &[i32], target_sum: i32) -> Option<(i32, i32, i32)> {
     for (index1, _) in numbers[..numbers.len() - 2].iter().enumerate() {
         for (index2, _) in numbers[index1 + 1..numbers.len() - 1].iter().enumerate() {
@@ -55,6 +56,10 @@ fn find_targets(numbers: &[i32], target_sum: i32, target_count: i32) -> Pair {
     }
     None
 }
+
+// To print answers from test functions
+// execute -> cargo test  -- --show-output
+// from terminal
 
 #[cfg(test)]
 mod tests {
