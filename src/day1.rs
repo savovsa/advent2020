@@ -15,17 +15,6 @@ const data: [i32; 200] = [
     1748, 1921, 1617, 2004, 1792, 1732, 1740, 1831,
 ];
 
-//   1748, 1921, 1617, 2004, 1792
-// VLady's idea
-// pick a number
-// put it in a bucket
-// try adding it to another number
-// if the sum is smaller than the target, put the second number in the bucket
-// if the sum is larger, put it in the
-// keep going until the count of the numbers in the bucket reaches the target count
-
-//Sasho's idea
-//
 fn day1_part2(numbers: &[i32], target_sum: i32) -> Option<(i32, i32, i32)> {
     for (index1, _) in numbers[..numbers.len() - 2].iter().enumerate() {
         for (index2, _) in numbers[index1 + 1..numbers.len() - 1].iter().enumerate() {
@@ -66,10 +55,6 @@ fn find_targets(numbers: &[i32], target_sum: i32, target_count: i32) -> Pair {
     }
     None
 }
-
-// To print answers from test functions
-// execute -> cargo test  -- --show-output
-// from terminal
 
 #[cfg(test)]
 mod tests {
