@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 const data: [i32; 200] = [
     1826, 1895, 1427, 1931, 1651, 1638, 1507, 1999, 1886, 1824, 1902, 1995, 1945, 1735, 1823, 1595,
     1936, 1476, 2010, 1833, 1932, 1772, 1791, 1814, 1783, 1957, 1901, 1600, 1502, 1521, 1812, 1974,
@@ -14,12 +15,39 @@ const data: [i32; 200] = [
     1748, 1921, 1617, 2004, 1792, 1732, 1740, 1831,
 ];
 
+//   1748, 1921, 1617, 2004, 1792
+// VLady's idea
+// pick a number
+// put it in a bucket
+// try adding it to another number
+// if the sum is smaller than the target, put the second number in the bucket
+// if the sum is larger, put it in the
+// keep going until the count of the numbers in the bucket reaches the target count
+
+//Sasho's idea
+//
+fn day1_part2(numbers: &[i32], target_sum: i32) -> Option<(i32, i32, i32)> {
+    for (index1, _) in numbers[..numbers.len() - 2].iter().enumerate() {
+        for (index2, _) in numbers[index1 + 1..numbers.len() - 1].iter().enumerate() {
+            for (index3, _) in numbers[..numbers.len()].iter().enumerate() {
+                if index3 != index1 && index3 != index2 {
+                    if numbers[index1] + numbers[index2] + numbers[index3] == target_sum {
+                        return Some((numbers[index1], numbers[index2], numbers[index3]));
+                    }
+                }
+            }
+        }
+    }
+
+    return None;
+}
+
 type Pair = Option<(i32, i32)>;
 
 fn day1_part1(numbers: &[i32], target_sum: i32) -> Pair {
     // find 2 entries that sum to 2020
     for (index, _) in numbers[..numbers.len()].iter().enumerate() {
-        let result = find_pair(&numbers[index..], target_sum);
+        let result = find_targets(&numbers[index..], target_sum, 3);
         if result.is_some() {
             return result;
         }
@@ -28,7 +56,7 @@ fn day1_part1(numbers: &[i32], target_sum: i32) -> Pair {
     return None;
 }
 
-fn find_pair(numbers: &[i32], target_sum: i32) -> Pair {
+fn find_targets(numbers: &[i32], target_sum: i32, target_count: i32) -> Pair {
     let first = numbers[0];
 
     for number in numbers[1..].iter() {
@@ -39,6 +67,10 @@ fn find_pair(numbers: &[i32], target_sum: i32) -> Pair {
     None
 }
 
+// To print answers from test functions
+// execute -> cargo test  -- --show-output
+// from terminal
+
 #[cfg(test)]
 mod tests {
     use super::*;
@@ -48,14 +80,14 @@ mod tests {
         use super::*;
         #[test]
         fn two_numbers_adding_up_to_2020() {
-            let pair = find_pair(&vec![1010, 1010], 2020);
+            let pair = find_targets(&vec![1010, 1010], 2020, 2);
 
             assert_eq!(pair, Some((1010, 1010)));
         }
 
         #[test]
         fn two_numbers_not_adding_up_to_2020() {
-            let pair = find_pair(&vec![1010, 1], 2020);
+            let pair = find_targets(&vec![1010, 1], 2020, 2);
 
             assert_eq!(pair, None);
         }
@@ -80,7 +112,34 @@ mod tests {
         fn answer() {
             let result = day1_part1(&data, 2020).unwrap();
 
-            println!("the answer is {}", result.0 * result.1);
+            println!("the answer to day 1 part 1 is {}", result.0 * result.1);
+            assert!(true);
+        }
+    }
+
+    mod day1_part2 {
+        use super::*;
+
+        #[test]
+        fn non_sequential_adding_to_2020() {
+            let result = day1_part2(&[1, 10, 2, 10, 3, 2000], 2020);
+            assert_some_eq!(result, (10, 10, 2000));
+        }
+
+        #[test]
+        fn not_adding_to_2020() {
+            let result = day1_part2(&[1, 2, 3, 5, 6], 2020);
+            assert_none!(result);
+        }
+
+        #[test]
+        fn answer() {
+            let result = day1_part2(&data, 2020).unwrap();
+
+            println!(
+                "the answer to day 1 part 2 is {}",
+                result.0 * result.1 * result.2
+            );
             assert!(true);
         }
     }
